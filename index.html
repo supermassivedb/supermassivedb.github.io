@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuperMassive - Open-Source Distributed Key-Value Database</title>
+    <meta name="author" content="Alex Gaetano Padula">
+    <meta name="description" content="SuperMassive is a distributed in-memory, durable key value database designed for massive amounts of critical data and low latency." />
+    <meta name="keywords" content="distributed, key-value, cluster, database, replication, sharding, durable, distributed systems, multi-platform" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta property="og:title" content="SuperMassive - Open-Source Distributed Key-Value Database">
+    <meta property="og:description" content="SuperMassive is a distributed in-memory, durable key value database designed for massive amounts of critical data and low latency.">
+    <meta property="og:image" content="assets/supermassive-avatar-v1.0.png">
+    <meta property="og:url" content="https://supermassivedb.com">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="og:site_name" content="SuperMassive - Open-Source Distributed Key-Value Database">
+    <meta name="twitter:image:alt" content="SuperMassive">
+    <link rel="icon" type="image/png" href="assets/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <link rel="shortcut icon" href="assets/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+    <link rel="manifest" href="assets/site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/yaml.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2563EB;
+            --primary-light: #DBEAFE;
+            --text-color: #1F2937;
+            --border-color: #E5E7EB;
+            --code-bg: #1F2937;
+            --sidebar-width: 300px;
+            --toc-width: 220px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: var(--text-color);
+            line-height: 1.7;
+            background: #FAFAFA;
+            width: 100%;
+        }
+
+        .layout {
+            display: flex;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: white;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 2rem 1.5rem;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) transparent;
+        }
+
+        .sidebar-header {
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .version-tag {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            background: var(--primary-light);
+            color: var(--primary-color);
+            border-radius: 9999px;
+            font-weight: 500;
+        }
+
+        .nav-group {
+            margin-bottom: 2rem;
+        }
+
+        .nav-group-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #4B5563;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-items a {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: #4B5563;
+            text-decoration: none;
+            font-size: 0.875rem;
+            border-radius: 6px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s;
+        }
+
+        .nav-items a:hover {
+            background: var(--primary-light);
+            color: var(--primary-color);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 3rem 4rem;
+            max-width: calc(1400px + var(--toc-width));
+            min-height: 100vh;
+            background: white;
+        }
+
+        .content-section {
+            margin-bottom: 4rem;
+            max-width: 768px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin: 2.5rem 0 1.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            color: #2D3748;
+        }
+
+        p {
+            margin-bottom: 1.25rem;
+            color: #4B5563;
+            font-size: 1rem;
+        }
+
+        /* Notice Boxes */
+        .notice {
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid;
+        }
+
+        .notice.warning {
+            background: #FEF3C7;
+            border-color: #F59E0B;
+        }
+
+        .notice.info {
+            background: #DBEAFE;
+            border-color: var(--primary-color);
+        }
+
+        .notice.tip {
+            background: #D1FAE5;
+            border-color: #059669;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: var(--code-bg);
+            padding: 1.25rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .code-block pre {
+            margin: 0;
+            font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+        }
+
+        .code-header {
+            background: #374151;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px 8px 0 0;
+            font-size: 0.875rem;
+            color: #E5E7EB;
+            font-weight: 500;
+            border-bottom: 1px solid #4B5563;
+            margin: -1.25rem -1.25rem 1rem -1.25rem;
+        }
+
+        /* Feature Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-card h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            font-size: 0.875rem;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: #F9FAFB;
+            font-weight: 600;
+            text-align: left;
+        }
+
+        /* Right-side TOC */
+        .table-of-contents {
+            position: fixed;
+            right: 2rem;
+            top: 2rem;
+            width: var(--toc-width);
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-size: 0.875rem;
+        }
+
+        .toc-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-list a {
+            display: block;
+            padding: 0.25rem 0;
+            color: #6B7280;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .toc-list a:hover {
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 1280px) {
+            .table-of-contents {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 2rem;
+            }
+        }
+
+        /* Command Reference Table */
+        .command-table {
+            font-size: 0.875rem;
+        }
+
+        .command-table td:first-child {
+            font-family: monospace;
+            white-space: nowrap;
+            color: var(--primary-color);
+            width: 30%;
+        }
+
+        /* Copy button */
+        .copy-button {
+            position: absolute;
+            right: 1rem;
+            top: 0.5rem;
+            background: #374151;
+            border: 1px solid #4B5563;
+            color: #E5E7EB;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-button:hover {
+            background: #4B5563;
+        }
+
+        /* Authentication Steps */
+        .auth-steps {
+            list-style: none;
+            counter-reset: step;
+            margin: 2rem 0;
+        }
+
+        .auth-steps li {
+            position: relative;
+            padding-left: 3rem;
+            margin-bottom: 1.5rem;
+            counter-increment: step;
+        }
+
+        .auth-steps li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2rem;
+            height: 2rem;
+            background: var(--primary-light);
+            color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .section-header {
+            background: #e1edff;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<div class="layout">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h1 class="sidebar-title">
+                <img src="assets/supermassive-logo--v1.0.svg" width="208">
+            </h1>
+        </div>
+        <nav>
+            <div class="nav-group">
+                <h2 class="nav-group-title">Getting Started</h2>
+                <div class="nav-items">
+                    <a href="#introduction">Introduction</a>
+                    <a href="#features">Features</a>
+                    <a href="#quick-start">Quick Start Guide</a>
+                </div>
+            </div>
+            <div class="nav-group">
+                <h2 class="nav-group-title">Core Concepts</h2>
+                <div class="nav-items">
+                    <a href="#architecture">Architecture</a>
+                    <a href="#authentication">Authentication</a>
+                    <a href="#configuration">Configuration</a>
+                    <a href="#commands">Command Reference</a>
+                </div>
+            </div>
+            <div class="nav-group">
+                <h2 class="nav-group-title">Advanced Topics</h2>
+                <div class="nav-items">
+                    <a href="#replication">Replication & Recovery</a>
+                    <a href="#monitoring">Monitoring & Stats</a>
+                    <a href="#performance">Performance Tuning</a>
+                </div>
+            </div>
+        </nav>
+
+        <p>&copy; 2025 SuperMassiveDB, all rights reserved.</p>
+    </aside>
+
+    <main class="main-content">
+        <div class="content-section" id="introduction">
+            <h1>Keep Calm and Shard On</h1>
+            <p>
+                SuperMassive is a high-performance, distributed key-value database designed for
+                massive scalability and fault tolerance. It combines the speed of in-memory
+                operations with the durability of persistent storage through its journal-based
+                recovery system.
+            </p>
+
+        </div>
+
+        <div class="content-section" id="features">
+            <h2>Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Horizontal Scaling</h3>
+                    <p>Add nodes on demand to increase capacity. The cluster can refresh configurations and connect to new additions automatically.</p>
+
+                </div>
+                <div class="feature-card">
+                    <h3>Smart Sharding</h3>
+                    <p>Intelligent data distribution using sequence-based round-robin approach
+                        ensures balanced write operations across primary nodes.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>High Availability</h3>
+                    <p>Automatic failover and self-healing capabilities ensure continuous
+                        operation even when nodes fail.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Data Consistency</h3>
+                    <p>Timestamp-based version control with automatic conflict resolution
+                        maintains data consistency across the cluster.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="quick-start">
+            <h2>Quick Start Guide</h2>
+            <p>To get SuperMassive for your system you can download the binaries on the release page on github. <a href="https://github.com/supermassivedb/supermassive/releases">https://github.com/supermassivedb/supermassive/releases</a></a></p>
+
+            <h3>1. Basic Setup</h3>
+            <p>When starting a cluster, primary or replica with no <code>.cluster</code> <code>.node</code> <code>.nodereplica</code> new ones with defaults will be created on start up.</p>
+
+            <p>A shared key is always required for each instance type.</p>
+
+            <p>A cluster requires a username and password to be started.  This can then be used to access the cluster through a client.</p>
+
+
+            <div class="code-block">
+                <div class="code-header">Terminal</div>
+                <pre><code class="language-bash"># Start a cluster node
+./supermassive --instance-type=cluster --username admin --password secure123 --shared-key cluster_key
+
+# In another terminal, start a node
+./supermassive --instance-type=node --shared-key cluster_key
+
+# Start a replica, the replica should live in a different directory if doing this locally.
+./supermassive --instance-type=nodereplica --shared-key cluster_key</code></pre>
+            </div>
+
+            <h3>2. Basic Operations</h3>
+            <div class="code-block">
+                <div class="code-header">Client Connection Example</div>
+                <pre><code class="language-bash"># Connect and authenticate
+(echo -n "AUTH " && echo -n $"admin\\0secure123" | base64 && cat) | nc -C localhost 4000
+OK authenticated
+
+# Write data
+PUT user:1001 '{"name": "John Doe", "email": "john@example.com"}'
+OK key-value written
+
+# Read data
+GET user:1001
+user:1001 {"name": "John Doe", "email": "john@example.com"}
+
+# Delete data
+DEL user:1001
+OK key-value deleted
+</code></pre>
+            </div>
+
+            <div class="notice info">
+                <strong>Note:</strong> The default cluster configuration uses port 4000 for the cluster, 4001 for the first node, and 4002 for the first replica.
+            </div>
+        </div>
+
+        <div class="content-section" id="architecture">
+            <h2>Architecture</h2>
+            <p>SuperMassive follows a distributed architecture with distinct component types.</p>
+
+            <h3>Component Hierarchy</h3>
+            <table>
+                <tr>
+                    <th>Component</th>
+                    <th>Description</th>
+                    <th>Role</th>
+                </tr>
+                <tr>
+                    <td>Cluster</td>
+                    <td>Central coordination unit</td>
+                    <td>Manages node distribution, request routing, and health monitoring</td>
+                </tr>
+                <tr>
+                    <td>Primary Node</td>
+                    <td>Data storage unit</td>
+                    <td>Handles write operations and maintains primary data copy with replica health monitoring</td>
+                </tr>
+                <tr>
+                    <td>Replica Node</td>
+                    <td>Redundancy unit</td>
+                    <td>Maintains synchronized copy of primary node data</td>
+                </tr>
+            </table>
+
+            <h3>Data Flow</h3>
+            <div class="code-block">
+                <div class="code-header">Write Operation Flow</div>
+                <pre><code class="language-plaintext">1. Client → Cluster: Write request
+2. Cluster → Primary Node: Route based on sequence
+3. Primary Node → Journal: Async write
+4. Primary Node → Replicas: Relay operation
+5. Primary Node → Client: Confirmation</code></pre>
+            </div>
+        </div>
+
+        <div class="content-section" id="authentication">
+            <h2>Authentication</h2>
+            <p>SuperMassive implements a multi-layer authentication system to secure both client-cluster and inter-node communications.</p>
+
+            <div class="notice warning">
+                <strong>Security Note:</strong> Always use secure passwords and protect your shared keys. Consider using environment variables for sensitive credentials.
+            </div>
+
+            <h3>Authentication Methods</h3>
+            <ol class="auth-steps">
+                <li>
+                    <strong>Client Authentication</strong>
+                    <p>Clients must authenticate using base64-encoded credentials in the format username\0password.  This is a form of basic authentication.</p>
+                </li>
+                <li>
+                    <strong>Inter-node Authentication</strong>
+                    <p>Nodes authenticate using a shared key specified during authentication phases.</p>
+                </li>
+                <li>
+                    <strong>TLS Support</strong>
+                    <p>Optional TLS encryption for all communications.</p>
+                </li>
+            </ol>
+
+            <h2 id="configuration">Configuration</h2>
+
+            <h3>Cluster Config Example</h3>
+            <p>1 primary with 1 replica for that primary.</p>
+            <div class="code-block">
+                <div class="code-header">YAML Configuration</div>
+                <pre><code class="language-yaml">
+health-check-interval: 2
+server-config:
+    address: localhost:4000
+    use-tls: false
+    cert-file: /
+    key-file: /
+    read-timeout: 10
+    buffer-size: 1024
+node-configs:
+    - node:
+        server-address: localhost:4001
+        use-tls: false
+        ca-cert-file: ""
+        connect-timeout: 5
+        write-timeout: 5
+        read-timeout: 5
+        max-retries: 3
+        retry-wait-time: 1
+        buffer-size: 1024
+      replicas:
+        - server-address: localhost:4002
+          use-tls: false
+          ca-cert-file: ""
+          connect-timeout: 5
+          write-timeout: 5
+          read-timeout: 5
+          max-retries: 3
+          retry-wait-time: 1
+          buffer-size: 1024</code></pre>
+            </div>
+
+            <h3>Primary Config Example</h3>
+            <p>To continue above 1 primary 1 replica for primary config.</p>
+            <div class="code-block">
+                <div class="code-header">YAML Configuration</div>
+                <pre><code class="language-yaml">
+health-check-interval: 2
+max-memory-threshold: 75
+server-config:
+    address: localhost:4001
+    use-tls: false
+    cert-file: /
+    key-file: /
+    read-timeout: 10
+    buffer-size: 1024
+read-replicas:
+    - server-address: localhost:4002
+      use-tls: false
+      ca-cert-file: /
+      connect-timeout: 5
+      write-timeout: 5
+      read-timeout: 5
+      max-retries: 3
+      retry-wait-time: 1
+      buffer-size: 1024
+
+                </code></pre>
+            </div>
+
+            <h3>Replica Config Example</h3>
+            <p>Replica configurations are simple!  Just server related.</p>
+            <div class="code-block">
+                <div class="code-header">YAML Configuration</div>
+                <pre><code class="language-yaml">
+server-config:
+    address: localhost:4002
+    use-tls: false
+    cert-file: /
+    key-file: /
+    read-timeout: 10
+    buffer-size: 1024
+max-memory-threshold: 75
+                </code></pre>
+            </div>
+
+        <div class="content-section" id="commands">
+            <h2>Command Reference</h2>
+            <p>SuperMassive supports a simple set of commands for data manipulation and cluster management.</p>
+
+            <h3>Data Operations</h3>
+            <table class="command-table">
+                <tr>
+                    <th>Command</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>PUT key value</td>
+                    <td>Store a key-value pair</td>
+                </tr>
+                <tr>
+                    <td>GET key</td>
+                    <td>Retrieve a value by key</td>
+                </tr>
+                <tr>
+                    <td>DEL key</td>
+                    <td>Delete a key-value pair</td>
+                </tr>
+                <tr>
+                    <td>INCR key [value]</td>
+                    <td>Increment numeric value by amount</td>
+                </tr>
+                <tr>
+                    <td>DECR key [value]</td>
+                    <td>Decrement numeric value by amount</td>
+                </tr>
+                <tr>
+                    <td>REGX pattern [offset] [limit]</td>
+                    <td>Search keys using regular expression with optional pagination</td>
+                </tr>
+            </table>
+
+            <h3>Cluster & Node Operations</h3>
+            <table class="command-table">
+                <tr>
+                    <th>Command</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>RCNF</td>
+                    <td>Refresh configuration files across cluster and all nodes</td>
+                </tr>
+                <tr>
+                    <td>PING</td>
+                    <td>ping pong</td>
+                </tr>
+            </table>
+
+            <h3>Advanced Pattern Matching</h3>
+            <div class="code-block">
+                <div class="code-header">REGX Examples</div>
+                <pre><code class="language-bash"># Match user keys with ID between 1000-1999
+REGX ^user:1[0-9]{3}$
+
+# Find all session keys from today
+REGX session:2025-02-23.*
+
+# Get first 10 logs from February
+REGX ^log:2025-02.* 0 10
+
+# Find all temporary keys
+REGX ^temp:.*:([0-9]+)$</code></pre>
+            </div>
+        </div>
+
+        <div class="content-section" id="monitoring">
+            <h2>Monitoring & Statistics</h2>
+            <p>SuperMassive provides detailed statistics and monitoring capabilities through the STAT command.</p>
+
+            <div class="code-block">
+                <div class="code-header">Statistics Example</div>
+                <pre><code class="language-bash"># Get full cluster stats
+CLUSTER localhost:4000
+    current_sequence 0
+    client_connection_count 1
+PRIMARY localhost:4001
+DISK
+    sync_enabled true
+    sync_interval 128ms
+    avg_page_size 1024.00
+    file_mode -rwxrwxr-x
+    is_closed false
+    last_page 99
+    storage_efficiency 0.9846
+    file_name .journal
+    page_size 1024
+    total_pages 100
+    total_header_size 1600
+    total_data_size 102400
+    page_utilization 1.0000
+    header_overhead_ratio 0.0154
+    file_size 104000
+    modified_time 2025-02-23T04:39:31-05:00
+MEMORY
+    load_factor 0.3906
+    grow_threshold 0.7500
+    max_probe_length 2
+    empty_buckets 156
+    utilization 0.3906
+    needs_grow false
+    needs_shrink false
+    size 256
+    used 100
+    shrink_threshold 0.2500
+    avg_probe_length 0.2600
+    empty_bucket_ratio 0.6094</code></pre>
+            </div>
+            <h2>Cluster Statistics</h2>
+            <table>
+                <tr>
+                    <th>Statistic</th>
+                    <th>Description</th>
+                    <th>Example Value</th>
+                </tr>
+                <tr>
+                    <td>current_sequence</td>
+                    <td>Current primary node to in sequence next up to write to</td>
+                    <td>32</td>
+                </tr>
+                <tr>
+                    <td>client_connection_count</td>
+                    <td>Amount of clients connected to cluster</td>
+                    <td>2</td>
+                </tr>
+            </table>
+            <h2>Memory Statistics</h2>
+            <table>
+                <tr>
+                    <th>Statistic</th>
+                    <th>Description</th>
+                    <th>Example Value</th>
+                </tr>
+                <tr class="section-header">
+                    <td colspan="3">Basic Metrics</td>
+                </tr>
+                <tr>
+                    <td>size</td>
+                    <td>Total number of buckets in the hash table</td>
+                    <td>32</td>
+                </tr>
+                <tr>
+                    <td>used</td>
+                    <td>Number of occupied buckets</td>
+                    <td>20</td>
+                </tr>
+                <tr>
+                    <td>load_factor</td>
+                    <td>Ratio of used buckets to total size (used/size)</td>
+                    <td>0.6250</td>
+                </tr>
+                <tr class="section-header">
+                    <td colspan="3">Threshold Controls</td>
+                </tr>
+                <tr>
+                    <td>grow_threshold</td>
+                    <td>Load factor threshold that triggers table growth</td>
+                    <td>0.7500</td>
+                </tr>
+                <tr>
+                    <td>shrink_threshold</td>
+                    <td>Load factor threshold that triggers table shrinking</td>
+                    <td>0.2500</td>
+                </tr>
+                <tr class="section-header">
+                    <td colspan="3">Performance Metrics</td>
+                </tr>
+                <tr>
+                    <td>avg_probe_length</td>
+                    <td>Average number of steps to find an item</td>
+                    <td>1.2500</td>
+                </tr>
+                <tr>
+                    <td>max_probe_length</td>
+                    <td>Maximum number of steps needed to find an item</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td>empty_buckets</td>
+                    <td>Number of unused bucket slots</td>
+                    <td>12</td>
+                </tr>
+                <tr>
+                    <td>empty_bucket_ratio</td>
+                    <td>Proportion of empty buckets to total size</td>
+                    <td>0.3750</td>
+                </tr>
+                <tr>
+                    <td>utilization</td>
+                    <td>Same as load_factor, efficiency measure</td>
+                    <td>0.6250</td>
+                </tr>
+            </table>
+
+            <h2>Disk Statistics</h2>
+            <table>
+                <tr>
+                    <th>Statistic</th>
+                    <th>Description</th>
+                    <th>Example Value</th>
+                </tr>
+                <tr class="section-header">
+                    <td colspan="3">File Information</td>
+                </tr>
+                <tr>
+                    <td>file_name</td>
+                    <td>Name of the pager file</td>
+                    <td>data.db</td>
+                </tr>
+                <tr>
+                    <td>file_size</td>
+                    <td>Total size of the file in bytes</td>
+                    <td>1048576</td>
+                </tr>
+                <tr>
+                    <td>file_mode</td>
+                    <td>File permissions</td>
+                    <td>-rw-r--r--</td>
+                </tr>
+                <tr>
+                    <td>modified_time</td>
+                    <td>Last modification timestamp</td>
+                    <td>2025-02-23T10:30:00Z</td>
+                </tr>
+                <tr class="section-header">
+                    <td colspan="3">Configuration</td>
+                </tr>
+                <tr>
+                    <td>page_size</td>
+                    <td>Size of each page in bytes</td>
+                    <td>4096</td>
+                </tr>
+                <tr>
+                    <td>sync_enabled</td>
+                    <td>Whether background syncing is enabled</td>
+                    <td>true</td>
+                </tr>
+                <tr>
+                    <td>sync_interval</td>
+                    <td>How often the file is synced to disk</td>
+                    <td>1s</td>
+                </tr>
+                <tr>
+                    <td>is_closed</td>
+                    <td>Whether the pager has been closed</td>
+                    <td>false</td>
+                </tr>
+                <tr class="section-header">
+                    <td colspan="3">Page Statistics</td>
+                </tr>
+                <tr>
+                    <td>total_pages</td>
+                    <td>Number of pages in the file</td>
+                    <td>250</td>
+                </tr>
+                <tr>
+                    <td>last_page</td>
+                    <td>Index of the last page</td>
+                    <td>249</td>
+                </tr>
+                <tr class="section-header">
+                    <td colspan="3">Storage Metrics</td>
+                </tr>
+                <tr>
+                    <td>total_header_size</td>
+                    <td>Total size used by page headers (16 bytes per page)</td>
+                    <td>4000</td>
+                </tr>
+                <tr>
+                    <td>total_data_size</td>
+                    <td>Actual data size without headers</td>
+                    <td>1044576</td>
+                </tr>
+                <tr>
+                    <td>storage_efficiency</td>
+                    <td>Ratio of data size to total size</td>
+                    <td>0.9962</td>
+                </tr>
+                <tr>
+                    <td>avg_page_size</td>
+                    <td>Average amount of data per page</td>
+                    <td>4178.30</td>
+                </tr>
+                <tr>
+                    <td>page_utilization</td>
+                    <td>How full pages are on average</td>
+                    <td>0.9845</td>
+                </tr>
+                <tr>
+                    <td>header_overhead_ratio</td>
+                    <td>Proportion of space used by headers</td>
+                    <td>0.0038</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="content-section" id="replication-recovery">
+<h2 id="replication">Replication & Recovery</h2>
+            <p>SuperMassive uses a journal-based replication system to ensure data consistency and fault tolerance.</p>
+
+            <h3>Replication Process</h3>
+            <ol class="auth-steps">
+                <li>
+                    <strong>Primary Write</strong>
+                    <p>Primary node writes data to journal and sends operation to replicas.</p>
+                </li>
+                <li>
+                    <strong>Replica Sync</strong>
+                    <p>Replicas receive operation and write to their own journal for recovery.</p>
+                </li>
+                <li>
+                    <strong>Recovery</strong>
+                    <p>At startup, all nodes recover from the journal. A replica will start a sync with its primary once the STARTSYNC command is transmitted; This happens on primary node health checks. The synchronization process is checkpoint-like in nature. Essentially, the replica informs the primary of its current journal position (for example, “My journal is at page 44”), and the primary then examines its own journal to send any missing entries. Once this process completes, the replica will be fully synchronized. Full synchronizations from an empty journal can take longer than those where the replica only needs to catch up on a few entries.</p>
+                </li>
+            </ol>
+
+            <h3>Recovery Process</h3>
+            <div class="code-block">
+                <div class="code-header">Recovery Steps</div>
+                <pre><code class="language-plaintext">1. Replica → Journal: Read journal entries
+        </div>
+
+        <div class="content-section" id="performance">
+            <h2>Performance Tuning</h2>
+
+            <h3>Node Memory Configuration</h3>
+            <div class="code-block">
+                <div class="code-header">Node Configuration</div>
+                <pre><code class="language-yaml">max-memory-threshold: 75  # Percentage of max memory to cap at</code></pre>
+            </div>
+
+            <div class="notice tip">
+                <strong>Performance Tip:</strong> Add more nodes to the cluster to prevent caps, allowing for more data storage and faster operations.
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+    // Initialize syntax highlighting
+    hljs.highlightAll();
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    // Add copy functionality to code blocks
+    document.querySelectorAll('.code-block').forEach(block => {
+        const button = document.createElement('button');
+        button.className = 'copy-button';
+        button.textContent = 'Copy';
+
+        button.addEventListener('click', () => {
+            const code = block.querySelector('code');
+            navigator.clipboard.writeText(code.textContent);
+            button.textContent = 'Copied!';
+            setTimeout(() => {
+                button.textContent = 'Copy';
+            }, 2000);
+        });
+
+        block.style.position = 'relative';
+        block.appendChild(button);
+    });
+</script>
+</body>
+</html>
