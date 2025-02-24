@@ -28,11 +28,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/yaml.min.js"></script>
     <style>
         :root {
-            --primary-color: #2563EB;
-            --primary-light: #DBEAFE;
-            --text-color: #1F2937;
-            --border-color: #E5E7EB;
-            --code-bg: #1F2937;
+            --primary-color: #1f1433;
+            --primary-light: #f5e6ff;
+            --text-color: #1b1723;
+            --border-color: #d5cee1;
+            --code-bg: #1e1431;
             --sidebar-width: 300px;
             --toc-width: 220px;
         }
@@ -66,6 +66,10 @@
             padding: 2rem 1.5rem;
             scrollbar-width: thin;
             scrollbar-color: var(--primary-color) transparent;
+        }
+
+        .sidebar a {
+            font-weight: normal;
         }
 
         .sidebar-header {
@@ -119,6 +123,7 @@
         .nav-items a:hover {
             background: var(--primary-light);
             color: var(--primary-color);
+            border-bottom: none;
         }
 
         /* Main Content Styles */
@@ -133,6 +138,18 @@
         .content-section {
             margin-bottom: 4rem;
             max-width: 768px;
+        }
+
+        a, a:visited {
+            color: #8250DF;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        a:hover {
+            color: #0e0917;
+            border-bottom: 2px solid #8250DF;
         }
 
         h1 {
@@ -154,12 +171,12 @@
             font-size: 1.5rem;
             font-weight: 600;
             margin: 2rem 0 1rem;
-            color: #2D3748;
+            color: #3d3844;
         }
 
         p {
             margin-bottom: 1.25rem;
-            color: #4B5563;
+            color: #3d3844;
             font-size: 1rem;
         }
 
@@ -177,8 +194,8 @@
         }
 
         .notice.info {
-            background: #DBEAFE;
-            border-color: var(--primary-color);
+            background: #ead9ff;
+            border-color: #8c56ce;
         }
 
         .notice.tip {
@@ -202,13 +219,13 @@
         }
 
         .code-header {
-            background: #374151;
+            background: #8250DF;
             padding: 0.75rem 1.25rem;
             border-radius: 8px 8px 0 0;
             font-size: 0.875rem;
-            color: #E5E7EB;
+            color: #e9e1f8;
             font-weight: 500;
-            border-bottom: 1px solid #4B5563;
+            border-bottom: 1px solid #9061e8;
             margin: -1.25rem -1.25rem 1rem -1.25rem;
         }
 
@@ -234,7 +251,7 @@
         }
 
         .feature-card h3 {
-            color: var(--primary-color);
+            color: #8250DF;
             margin-top: 0;
             display: flex;
             align-items: center;
@@ -276,7 +293,7 @@
         .toc-title {
             font-weight: 600;
             margin-bottom: 1rem;
-            color: #374151;
+            color: #615267;
         }
 
         .toc-list {
@@ -329,9 +346,9 @@
             position: absolute;
             right: 1rem;
             top: 0.5rem;
-            background: #374151;
-            border: 1px solid #4B5563;
-            color: #E5E7EB;
+            background: #9b6df3;
+            border: 1px solid #8151dc;
+            color: #e9e1f8;
             padding: 0.25rem 0.75rem;
             border-radius: 4px;
             font-size: 0.75rem;
@@ -340,7 +357,7 @@
         }
 
         .copy-button:hover {
-            background: #4B5563;
+            background: #8151dc;
         }
 
         /* Authentication Steps */
@@ -374,7 +391,7 @@
         }
 
         .section-header {
-            background: #e1edff;
+            background: #e4d7fd;
             font-weight: 600;
         }
     </style>
@@ -424,10 +441,7 @@
         <div class="content-section" id="introduction">
             <h1>Keep Calm and Shard On</h1>
             <p>
-                SuperMassive is a high-performance, distributed key-value database designed for
-                massive scalability and fault tolerance. It combines the speed of in-memory
-                operations with the durability of persistent storage through its journal-based
-                recovery system.
+                SuperMassive is an open-source licensed under BSD-3, high-performance distributed key-value database designed for unlimited scale without compromise. It combines lightning-fast in-memory operations with robust reliability through intelligent sharding and parallel processing across unlimited nodes. The system features automatic self-healing, recovery, and synchronization capabilities. <br/><br/>SuperMassive's elegant timestamp-based consistency model enables effortless horizontal scaling, delivering exceptional throughput while maintaining zero-downtime resilience - simply add nodes to expand your capacity.  <br/><br/>SuperMassive is the designed as a solution for mission-critical applications that demand a key-value database with speed, reliability, and scalability.
             </p>
 
         </div>
@@ -454,6 +468,14 @@
                     <h3>Data Consistency</h3>
                     <p>Timestamp-based version control with automatic conflict resolution
                         maintains data consistency across the cluster.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Parallel Operations</h3>
+                    <p>Read operations are done in parallel across primaries and (if need be) replicas. Write operations are done in sequence.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Multiplatform</h3>
+                    <p>SuperMassive is available for Linux, macOS, and Windows. It can be compiled from source or downloaded as pre-built binaries.</p>
                 </div>
             </div>
         </div>
@@ -543,7 +565,9 @@ OK key-value deleted
 2. Cluster → Primary Node: Route based on sequence
 3. Primary Node → Journal: Async write
 4. Primary Node → Replicas: Relay operation
-5. Primary Node → Client: Confirmation</code></pre>
+5. Primary Node → Cluster: Confirmation | If primary node unavailable we go to write to next primary node in sequence
+6. Cluster → Returns result to client
+</code></pre>
             </div>
         </div>
 
@@ -718,9 +742,18 @@ REGX session:2025-02-23.*
 REGX ^log:2025-02.* 0 10
 
 # Find all temporary keys
-REGX ^temp:.*:([0-9]+)$</code></pre>
+REGX ^temp:.*:([0-9]+)$
+
+# Example results
+OK user:1001 {"data": 123}
+user:1002 {"data": 1234}
+user:1003 {"data": 12345}
+user:1004 {"data": 123456}
+..
+</code></pre>
             </div>
         </div>
+
 
         <div class="content-section" id="monitoring">
             <h2>Monitoring & Statistics</h2>
